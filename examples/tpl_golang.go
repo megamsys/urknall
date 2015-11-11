@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 type Golang struct {

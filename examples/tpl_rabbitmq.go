@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dynport/urknall"
+import "github.com/megamsys/urknall"
 
 type RabbitMQ struct {
 	Version string `urknall:"required=true"` // e.g. 3.3.4

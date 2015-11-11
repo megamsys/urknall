@@ -6,8 +6,8 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/dynport/urknall/cmd"
-	"github.com/dynport/urknall/pubsub"
+	"github.com/megamsys/urknall/cmd"
+	"github.com/megamsys/urknall/pubsub"
 )
 
 // A task is a list of commands. Each task is cached internally, i.e. if an

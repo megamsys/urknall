@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 func main() {

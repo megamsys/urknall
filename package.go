@@ -1,6 +1,6 @@
 package urknall
 
-import "github.com/dynport/urknall/cmd"
+import "github.com/megamsys/urknall/cmd"
 
 // A template is used to modularize the urknall setting. Templates are rendered
 // into a package and during rendering tasks can be added.

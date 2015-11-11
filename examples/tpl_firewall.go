@@ -5,8 +5,8 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/dynport/urknall"
-	"github.com/dynport/urknall/cmd"
+	"github.com/megamsys/urknall"
+	"github.com/megamsys/urknall/cmd"
 )
 
 type Firewall struct {

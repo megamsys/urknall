@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dynport/urknall"
+import "github.com/megamsys/urknall"
 
 type PostGis struct {
 	Version            string `urknall:"required=true"`

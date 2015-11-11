@@ -4,7 +4,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/dynport/urknall/utils"
+	"github.com/megamsys/urknall/utils"
 )
 
 type BuildHost struct {

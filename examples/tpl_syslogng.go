@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dynport/urknall"
+import "github.com/megamsys/urknall"
 
 const syslogNgRestart = "{ status syslog-ng | grep running && restart syslog-ng; } || start syslog-ng"
 

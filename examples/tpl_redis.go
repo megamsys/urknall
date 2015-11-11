@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/dynport/urknall"
-	"github.com/dynport/urknall/cmd"
+	"github.com/megamsys/urknall"
+	"github.com/megamsys/urknall/cmd"
 )
 
 type Redis struct {

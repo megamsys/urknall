@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 type Cronjob struct {

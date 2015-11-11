@@ -1,6 +1,6 @@
 package urknall
 
-import "github.com/dynport/urknall/target"
+import "github.com/megamsys/urknall/target"
 
 // The target interface is used to describe something a package can be built
 // on.

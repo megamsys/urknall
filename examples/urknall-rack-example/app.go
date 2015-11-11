@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 // App is a urknall.Template which will be used to be executed on a target

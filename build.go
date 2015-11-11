@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dynport/urknall/pubsub"
-	"github.com/dynport/urknall/target"
+	"github.com/megamsys/urknall/pubsub"
+	"github.com/megamsys/urknall/target"
 )
 
 // A shortcut creating and running a build from the given target and template.

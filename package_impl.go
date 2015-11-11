@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dynport/urknall/cmd"
-	"github.com/dynport/urknall/utils"
+	"github.com/megamsys/urknall/cmd"
+	"github.com/megamsys/urknall/utils"
 )
 
 type packageImpl struct {

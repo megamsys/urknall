@@ -1,6 +1,6 @@
 package urknall
 
-import "github.com/dynport/urknall/utils"
+import "github.com/megamsys/urknall/utils"
 
 type stringCommand struct {
 	cmd string

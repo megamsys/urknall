@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/dynport/urknall/utils"
+	"github.com/megamsys/urknall/utils"
 )
 
 // The "FileCommand" is used to write files to the host being provisioned. The go templating mechanism (see

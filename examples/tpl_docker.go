@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dynport/urknall"
+import "github.com/megamsys/urknall"
 
 type Docker struct {
 	Version          string `urknall:"required=true"` // e.g. 1.1.0

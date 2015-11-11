@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 // Ruby compiles and installs ruby from source

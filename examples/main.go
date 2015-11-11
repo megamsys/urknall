@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 var logger = log.New(os.Stderr, "", 0)

@@ -1,0 +1,33 @@
+{
+	"ImportPath": "github.com/megamsys/urknall",
+	"GoVersion": "go1.5.1",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/dynport/dgtk/cli",
+			"Rev": "6efda1e0c80cac5a0a6602b4b9a6d2b42540f4de"
+		},
+		{
+			"ImportPath": "github.com/dynport/dgtk/github",
+			"Rev": "6efda1e0c80cac5a0a6602b4b9a6d2b42540f4de"
+		},
+		{
+			"ImportPath": "github.com/dynport/dgtk/pubsub",
+			"Rev": "6efda1e0c80cac5a0a6602b4b9a6d2b42540f4de"
+		},
+		{
+			"ImportPath": "github.com/dynport/dgtk/tagparse",
+			"Rev": "6efda1e0c80cac5a0a6602b4b9a6d2b42540f4de"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/curve25519",
+			"Rev": "575fdbe86e5dd89229707ebec0575ce7d088a4a6"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh",
+			"Rev": "575fdbe86e5dd89229707ebec0575ce7d088a4a6"
+		}
+	]
+}
