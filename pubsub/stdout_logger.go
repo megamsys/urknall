@@ -13,7 +13,7 @@ import (
 const (
 	colorDryRun = 226
 	colorCached = 33
-	colorExec   = 34
+	colorExec   = 46
 )
 
 var colorMapping = map[string]int{
@@ -55,13 +55,13 @@ func (logger *logger) formatCommandOuput(message *Message) string {
 	prefix := fmt.Sprintf("[%s][%s][%s]", formatIp(message.Hostname), formatTaskName(message.TaskName, 12), formatDuration(logger.sinceStarted()))
 	line := message.Line
 	if message.IsStderr() {
-		line = colorize(13, line)
+		line = colorize(34, line)
 	}
 	return prefix + " " + line
 }
 
 func formatIp(ip string) string {
-	return fmt.Sprintf("%15s", ip)
+	return fmt.Sprintf("%s", ip)
 }
 
 type formatter func(urknallMessage *Message) string
