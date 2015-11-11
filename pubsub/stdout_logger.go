@@ -55,7 +55,7 @@ func (logger *logger) formatCommandOuput(message *Message) string {
 	prefix := fmt.Sprintf("[%s][%s][%s]", formatIp(message.Hostname), formatTaskName(message.TaskName, 12), formatDuration(logger.sinceStarted()))
 	line := message.Line
 	if message.IsStderr() {
-		line = colorize(1, line)
+		line = colorize(13, line)
 	}
 	return prefix + " " + line
 }
