@@ -1,7 +1,7 @@
 # Urknall - opinionated provisioning for clever developers
 
 [![Documentation](http://img.shields.io/badge/gh--pages-documentation-blue.svg)](http://urknall.dynport.de)
-[![GoDoc](https://godoc.org/github.com/dynport/urknall?status.svg)](https://godoc.org/github.com/dynport/urknall)
+[![GoDoc](https://godoc.org/github.com/megamsys/urknall?status.svg)](https://godoc.org/github.com/megamsys/urknall)
 
 [Urknall](http://urknall.dynport.de) is the basic building block for creating
 go based tools for the administration of complex infrastructure. It provides

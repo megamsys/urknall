@@ -3,7 +3,7 @@ package urknall
 import (
 	"log"
 
-	"github.com/dynport/urknall/cmd"
+	"github.com/megamsys/urknall/cmd"
 )
 
 func ExampleBuild() {

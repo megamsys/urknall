@@ -1,6 +1,6 @@
 package urknall
 
-import "github.com/dynport/urknall/cmd"
+import "github.com/megamsys/urknall/cmd"
 
 type commandWrapper struct {
 	command cmd.Command

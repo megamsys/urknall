@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dynport/urknall/cmd"
-	"github.com/dynport/urknall/target"
+	"github.com/megamsys/urknall/cmd"
+	"github.com/megamsys/urknall/target"
 )
 
 // commandRunner is used to execute commands in a build.

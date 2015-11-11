@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dynport/urknall"
+import "github.com/megamsys/urknall"
 
 type Postgres struct {
 	Version string `urknall:"required=true"` // 9.3.4

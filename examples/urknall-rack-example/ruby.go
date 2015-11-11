@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 // Ruby is a urknall.Template to install ruby from source

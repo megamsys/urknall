@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dynport/urknall/utils"
+	"github.com/megamsys/urknall/utils"
 )
 
 func Shell(cmd string) *ShellCommand {

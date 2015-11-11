@@ -3,7 +3,7 @@ package urknall
 import (
 	"time"
 
-	"github.com/dynport/urknall/pubsub"
+	"github.com/megamsys/urknall/pubsub"
 )
 
 func message(key string, hostname string, taskName string) (msg *pubsub.Message) {

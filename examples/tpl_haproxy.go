@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 type HAProxy struct {

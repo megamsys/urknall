@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/dynport/urknall"
+	"github.com/megamsys/urknall"
 )
 
 type Hostname struct {

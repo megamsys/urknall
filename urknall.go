@@ -6,7 +6,7 @@ package urknall
 import (
 	"io"
 
-	"github.com/dynport/urknall/pubsub"
+	"github.com/megamsys/urknall/pubsub"
 )
 
 // OpenLogger creates a logging facility for urknall using the given writer for

@@ -8,7 +8,7 @@ import (
 )
 
 type base struct {
-	Repo     string `cli:"opt -r --repo default=dynport/urknall desc='repository used to retrieve files from'"`
+	Repo     string `cli:"opt -r --repo default=megamsys/urknall desc='repository used to retrieve files from'"`
 	RepoPath string `cli:"opt -p --path default=examples desc='path in repository used to retrieve files from'"`
 }
 

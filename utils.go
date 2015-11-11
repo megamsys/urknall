@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 
-	"github.com/dynport/urknall/cmd"
+	"github.com/megamsys/urknall/cmd"
 )
 
 func renderTemplate(builder Template) (*packageImpl, error) {
