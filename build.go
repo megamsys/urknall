@@ -6,14 +6,23 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-
+	constants "github.com/megamsys/libgo/utils"
+	"github.com/megamsys/libgo/pairs"
+	"github.com/megamsys/libgo/events"
+	"github.com/megamsys/libgo/events/alerts"
 	"github.com/megamsys/urknall/pubsub"
 	"github.com/megamsys/urknall/target"
 )
-
+const (
+	STARTING = "starting"
+	COMPLETED = "completed"
+)
 // A shortcut creating and running a build from the given target and template.
-func Run(target Target, tpl Template) (e error) {
-	return (&Build{Target: target, Template: tpl}).Run()
+func Run(target Target, tpl Template,inputs []string) (e error) {
+	return (&Build{
+		Target: target,
+		Template: tpl,
+		Inputs: inputs}).Run()
 }
 
 // A shortcut creating and runnign a build from the given target and template
@@ -29,6 +38,7 @@ type Build struct {
 	Target            // Where to run the build.
 	Template          // What to actually build.
 	Env      []string // Environment variables in the form `KEY=VALUE`.
+	Inputs   []string // Inputs for OBC like email and status
 }
 
 // This will render the build's template into a package and run all its tasks.
@@ -180,8 +190,11 @@ func (build *Build) prepareTask(tsk *task, ct checksumTree) (e error) {
 }
 
 func (build *Build) buildTask(tsk *task) (e error) {
+	var status constants.Status
 	checksumDir := fmt.Sprintf(ukCACHEDIR+"/%s", tsk.name)
-
+	templateName := strings.Split(tsk.name, ".")[1]
+  status = constants.Status(strings.Join([]string{templateName,STARTING},"."))
+	_ = eventNotify(status,build.Inputs,build.hostname())
 	tsk.started = time.Now()
 
 	for _, cmd := range tsk.commands {
@@ -199,7 +212,8 @@ func (build *Build) buildTask(tsk *task) (e error) {
 		default:
 			m.ExecStatus = pubsub.StatusExecStart
 			m.Publish("started")
-
+			status := constants.Status(strings.Join([]string{tsk.name ,STARTING},"."))
+			_ = eventNotify(status, build.Inputs,build.hostname())
 			r := &commandRunner{
 				build:       build,
 				command:     cmd.command,
@@ -212,7 +226,8 @@ func (build *Build) buildTask(tsk *task) (e error) {
 			m.ExecStatus = pubsub.StatusExecFinished
 		}
 		m.Publish("finished")
-
+    status = constants.Status(strings.Join([]string{tsk.name,COMPLETED},"."))
+		_ = eventNotify(status, build.Inputs,build.hostname())
 		err := build.addCmdToTaskLog(tsk, checksumDir, checksum, cmdErr)
 		switch {
 		case cmdErr != nil:
@@ -221,8 +236,41 @@ func (build *Build) buildTask(tsk *task) (e error) {
 			return err
 		}
 	}
-
+  status = constants.Status(strings.Join([]string{templateName,COMPLETED},"."))
+  _ = eventNotify(status,build.Inputs,build.hostname())
 	return nil
+}
+
+func eventNotify(status constants.Status,inputs []string,host string) error {
+	var email string
+	for _,v := range inputs {
+			input := strings.Split(v,"=")
+		switch input[0] {
+		case constants.USERMAIL:
+			email = input[1]
+		}
+		}
+	mi := make(map[string]string)
+	js := make(pairs.JsonPairs, 0)
+	m := make(map[string][]string, 2)
+	m["status"] = []string{status.String()}
+	m["description"] = []string{status.Description(host)}
+	js.NukeAndSet(m) //just nuke the matching output key:
+
+	mi[constants.HOST_IP] = host
+	mi[constants.ACCOUNT_ID] = email
+	mi[constants.EVENT_TYPE] = status.Event_type()
+	newEvent := events.NewMulti(
+		[]*events.Event{
+			&events.Event{
+				AccountsId:  email,
+				EventAction: alerts.STATUS,
+				EventType:   constants.EventUser,
+				EventData:   alerts.EventData{M: mi, D: js.ToString()},
+				Timestamp:   time.Now().Local(),
+			},
+		})
+	return newEvent.Write()
 }
 
 // addCmdToTaskLog will manage the log of run commands in a file. This file gets append the path to a file
