@@ -17,6 +17,8 @@ const (
 	STARTING = "starting"
 	COMPLETED = "completed"
 )
+
+	var status constants.Status
 // A shortcut creating and running a build from the given target and template.
 func Run(target Target, tpl Template,inputs []string) (e error) {
 	return (&Build{
@@ -49,6 +51,9 @@ func (b *Build) Run() error {
 	}
 	m := message(pubsub.MessageTasksProvision, b.hostname(), "")
 	m.Publish("started")
+	templateName := strings.Split(pkg.tasks[0].name,".")[0]
+	status = constants.Status(strings.Join([]string{templateName,STARTING},"."))
+	_ = eventNotify(b.Inputs,b.hostname())
 	for _, task := range pkg.tasks {
 		if e = b.buildTask(task); e != nil {
 			m.PublishError(e)
@@ -56,6 +61,8 @@ func (b *Build) Run() error {
 		}
 	}
 	m.Publish("finished")
+	status = constants.Status(strings.Join([]string{templateName,COMPLETED},"."))
+	_ = eventNotify(b.Inputs,b.hostname())
 	return nil
 }
 
@@ -190,11 +197,7 @@ func (build *Build) prepareTask(tsk *task, ct checksumTree) (e error) {
 }
 
 func (build *Build) buildTask(tsk *task) (e error) {
-	var status constants.Status
 	checksumDir := fmt.Sprintf(ukCACHEDIR+"/%s", tsk.name)
-	templateName := strings.Split(tsk.name, ".")[1]
-  status = constants.Status(strings.Join([]string{templateName,STARTING},"."))
-	_ = eventNotify(status,build.Inputs,build.hostname())
 	tsk.started = time.Now()
 
 	for _, cmd := range tsk.commands {
@@ -212,8 +215,8 @@ func (build *Build) buildTask(tsk *task) (e error) {
 		default:
 			m.ExecStatus = pubsub.StatusExecStart
 			m.Publish("started")
-			status := constants.Status(strings.Join([]string{tsk.name ,STARTING},"."))
-			_ = eventNotify(status, build.Inputs,build.hostname())
+			status = constants.Status(strings.Join([]string{tsk.name ,STARTING},"."))
+			_ = eventNotify(build.Inputs,build.hostname())
 			r := &commandRunner{
 				build:       build,
 				command:     cmd.command,
@@ -221,13 +224,15 @@ func (build *Build) buildTask(tsk *task) (e error) {
 				taskName:    tsk.name,
 			}
 			cmdErr = r.run()
-
+      if cmdErr == nil {
+				status = constants.Status(strings.Join([]string{tsk.name,COMPLETED},"."))
+				_ = eventNotify(build.Inputs,build.hostname())
+			}
 			m.Error = cmdErr
 			m.ExecStatus = pubsub.StatusExecFinished
 		}
 		m.Publish("finished")
-    status = constants.Status(strings.Join([]string{tsk.name,COMPLETED},"."))
-		_ = eventNotify(status, build.Inputs,build.hostname())
+
 		err := build.addCmdToTaskLog(tsk, checksumDir, checksum, cmdErr)
 		switch {
 		case cmdErr != nil:
@@ -236,12 +241,10 @@ func (build *Build) buildTask(tsk *task) (e error) {
 			return err
 		}
 	}
-  status = constants.Status(strings.Join([]string{templateName,COMPLETED},"."))
-  _ = eventNotify(status,build.Inputs,build.hostname())
 	return nil
 }
 
-func eventNotify(status constants.Status,inputs []string,host string) error {
+func eventNotify(inputs []string,host string) error {
 	var email string
 	for _,v := range inputs {
 			input := strings.Split(v,"=")
