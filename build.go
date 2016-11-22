@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	constants "github.com/megamsys/libgo/utils"
+	constants "github.com/megamsys/libgo/megdc"
 	"github.com/megamsys/libgo/pairs"
 	"github.com/megamsys/libgo/events"
 	"github.com/megamsys/libgo/events/alerts"
@@ -14,11 +14,15 @@ import (
 	"github.com/megamsys/urknall/target"
 )
 const (
+	RUNNING = "running"
+	FINISHED = "finished"
 	STARTING = "starting"
 	COMPLETED = "completed"
 )
 
 	var status constants.Status
+
+
 // A shortcut creating and running a build from the given target and template.
 func Run(target Target, tpl Template,inputs []string) (e error) {
 	return (&Build{
@@ -52,7 +56,7 @@ func (b *Build) Run() error {
 	m := message(pubsub.MessageTasksProvision, b.hostname(), "")
 	m.Publish("started")
 	templateName := strings.Split(pkg.tasks[0].name,".")[0]
-	status = constants.Status(strings.Join([]string{templateName,STARTING},"."))
+	status = constants.Status(strings.Join([]string{templateName,RUNNING},"."))
 	_ = eventNotify(b.Inputs,b.hostname())
 	for _, task := range pkg.tasks {
 		if e = b.buildTask(task); e != nil {
@@ -60,8 +64,8 @@ func (b *Build) Run() error {
 			return e
 		}
 	}
-	m.Publish("finished")
-	status = constants.Status(strings.Join([]string{templateName,COMPLETED},"."))
+	m.Publish(FINISHED)
+	status = constants.Status(strings.Join([]string{templateName,FINISHED},"."))
 	_ = eventNotify(b.Inputs,b.hostname())
 	return nil
 }
