@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	constants "github.com/megamsys/libgo/utils"
+	constants "github.com/megamsys/libgo/utils/obc"
 	"github.com/megamsys/libgo/pairs"
 	"github.com/megamsys/libgo/events"
 	"github.com/megamsys/libgo/events/alerts"
@@ -14,13 +14,17 @@ import (
 	"github.com/megamsys/urknall/target"
 )
 const (
+	RUNNING = "running"
+	FINISHED = "finished"
 	STARTING = "starting"
 	COMPLETED = "completed"
 )
 
 	var status constants.Status
+
+
 // A shortcut creating and running a build from the given target and template.
-func Run(target Target, tpl Template,inputs []string) (e error) {
+func Run(target Target, tpl Template,inputs map[string]string) (e error) {
 	return (&Build{
 		Target: target,
 		Template: tpl,
@@ -40,7 +44,7 @@ type Build struct {
 	Target            // Where to run the build.
 	Template          // What to actually build.
 	Env      []string // Environment variables in the form `KEY=VALUE`.
-	Inputs   []string // Inputs for OBC like email and status
+	Inputs   map[string]string // Inputs for OBC like email and status
 }
 
 // This will render the build's template into a package and run all its tasks.
@@ -52,7 +56,7 @@ func (b *Build) Run() error {
 	m := message(pubsub.MessageTasksProvision, b.hostname(), "")
 	m.Publish("started")
 	templateName := strings.Split(pkg.tasks[0].name,".")[0]
-	status = constants.Status(strings.Join([]string{templateName,STARTING},"."))
+	status = constants.Status(strings.Join([]string{templateName,RUNNING},"."))
 	_ = eventNotify(b.Inputs,b.hostname())
 	for _, task := range pkg.tasks {
 		if e = b.buildTask(task); e != nil {
@@ -60,8 +64,8 @@ func (b *Build) Run() error {
 			return e
 		}
 	}
-	m.Publish("finished")
-	status = constants.Status(strings.Join([]string{templateName,COMPLETED},"."))
+	m.Publish(FINISHED)
+	status = constants.Status(strings.Join([]string{templateName,FINISHED},"."))
 	_ = eventNotify(b.Inputs,b.hostname())
 	return nil
 }
@@ -244,13 +248,14 @@ func (build *Build) buildTask(tsk *task) (e error) {
 	return nil
 }
 
-func eventNotify(inputs []string,host string) error {
-	var email string
-	for _,v := range inputs {
-			input := strings.Split(v,"=")
-		switch input[0] {
+func eventNotify(inputs map[string]string,host string) error {
+	var email,hostid string
+	for k,v := range inputs {
+		switch k {
 		case constants.USERMAIL:
-			email = input[1]
+			email = v
+		case constants.HOST_ID:
+			hostid = v
 		}
 		}
 	mi := make(map[string]string)
@@ -261,6 +266,7 @@ func eventNotify(inputs []string,host string) error {
 	js.NukeAndSet(m) //just nuke the matching output key:
 
 	mi[constants.HOST_IP] = host
+	mi[constants.HOST_ID] = hostid
 	mi[constants.ACCOUNT_ID] = email
 	mi[constants.EVENT_TYPE] = status.Event_type()
 	newEvent := events.NewMulti(
