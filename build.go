@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	constants "github.com/megamsys/libgo/megdc"
+	constants "github.com/megamsys/libgo/utils/obc"
 	"github.com/megamsys/libgo/pairs"
 	"github.com/megamsys/libgo/events"
 	"github.com/megamsys/libgo/events/alerts"
@@ -24,7 +24,7 @@ const (
 
 
 // A shortcut creating and running a build from the given target and template.
-func Run(target Target, tpl Template,inputs []string) (e error) {
+func Run(target Target, tpl Template,inputs map[string]string) (e error) {
 	return (&Build{
 		Target: target,
 		Template: tpl,
@@ -44,7 +44,7 @@ type Build struct {
 	Target            // Where to run the build.
 	Template          // What to actually build.
 	Env      []string // Environment variables in the form `KEY=VALUE`.
-	Inputs   []string // Inputs for OBC like email and status
+	Inputs   map[string]string // Inputs for OBC like email and status
 }
 
 // This will render the build's template into a package and run all its tasks.
@@ -248,13 +248,14 @@ func (build *Build) buildTask(tsk *task) (e error) {
 	return nil
 }
 
-func eventNotify(inputs []string,host string) error {
-	var email string
-	for _,v := range inputs {
-			input := strings.Split(v,"=")
-		switch input[0] {
+func eventNotify(inputs map[string]string,host string) error {
+	var email,hostid string
+	for k,v := range inputs {
+		switch k {
 		case constants.USERMAIL:
-			email = input[1]
+			email = v
+		case constants.HOST_ID:
+			hostid = v
 		}
 		}
 	mi := make(map[string]string)
@@ -265,6 +266,7 @@ func eventNotify(inputs []string,host string) error {
 	js.NukeAndSet(m) //just nuke the matching output key:
 
 	mi[constants.HOST_IP] = host
+	mi[constants.HOST_ID] = hostid
 	mi[constants.ACCOUNT_ID] = email
 	mi[constants.EVENT_TYPE] = status.Event_type()
 	newEvent := events.NewMulti(
